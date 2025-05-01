@@ -10,7 +10,7 @@ from wtforms.validators import Length, InputRequired, DataRequired
 from wtforms.validators import Regexp
 
 
-class FormWTFAjouterGenres(FlaskForm):
+class FormWTFAjouterImprimante(FlaskForm):
     """
         Dans le formulaire "imprimante_ajouter_wtf.html" on impose que le champ soit rempli.
         Définition d'un "bouton" submit avec un libellé personnalisé.
@@ -33,7 +33,7 @@ class FormWTFAjouterGenres(FlaskForm):
     submit = SubmitField("Enregistrer l'imprimante")
 
 
-class FormWTFUpdateGenre(FlaskForm):
+class FormWTFUpdateImprimante(FlaskForm):
     """
         Dans le formulaire "imprimante_update_wtf.html" on impose que le champ soit rempli.
         Définition d'un "bouton" submit avec un libellé personnalisé.
@@ -53,7 +53,7 @@ class FormWTFUpdateGenre(FlaskForm):
     submit = SubmitField("Update genre")
 
 
-class FormWTFDeleteGenre(FlaskForm):
+class FormWTFDeleteImprimante(FlaskForm):
     """
         Dans le formulaire "imprimante_delete_wtf.html"
 

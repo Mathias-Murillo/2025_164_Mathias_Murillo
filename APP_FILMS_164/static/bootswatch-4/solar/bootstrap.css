@@ -62,8 +62,8 @@
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
-  --bs-body-colorline-height: var(--bs-body-line-height);: #fffdfd;
-  --bs-body-bg: #f60909;
+  --bs-body-color: #839496;
+  --bs-body-bg: #002b36;
 }
 
 *,

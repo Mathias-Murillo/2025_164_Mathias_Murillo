@@ -32,10 +32,10 @@
 }
 
 .link-info {
-  color: rgba(13, 202, 240, 0);
+  color: #0dcaf0;
 }
 .link-info:hover, .link-info:focus {
-  color: #ffffff;
+  color: #3dd5f3;
 }
 
 .link-warning {

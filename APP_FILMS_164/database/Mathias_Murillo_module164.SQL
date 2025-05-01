@@ -22,7 +22,15 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
+DROP DATABASE IF EXISTS Mathias_Murillo_module164;
 
+-- Création d'un nouvelle base de donnée
+
+CREATE DATABASE IF NOT EXISTS Mathias_Murillo_module164;
+
+-- Utilisation de cette base de donnée
+
+USE Mathias_Murillo_module164;
 --
 -- Table structure for table `fichier_utiliser`
 --
