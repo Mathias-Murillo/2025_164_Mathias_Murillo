@@ -122,7 +122,8 @@ class ExceptionFilmDeleteWtf(Base):
 class ExceptionInitAppFilms164(Base):
     pass
 
-
+class ExceptionimprimanteDeleteWtf(Base):
+    pass
 """
     Grâce à la méthode "flash" cela permet de "raise" (remonter) les erreurs "try...execpt" dans la page "home.html"
 """

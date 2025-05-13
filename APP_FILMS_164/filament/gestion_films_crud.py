@@ -1,4 +1,4 @@
-"""Gestion des "routes" FLASK et des données pour les films.
+"""Gestion des "routes" FLASK et des données pour les filament.
 Fichier : gestion_films_crud.py
 Auteur : OM 2022.04.11
 """
@@ -11,7 +11,7 @@ from flask import url_for
 
 from APP_FILMS_164.database.database_tools import DBconnection
 from APP_FILMS_164.erreurs.exceptions import *
-from APP_FILMS_164.films.gestion_films_wtf_forms import FormWTFUpdateFilm, FormWTFAddFilm, FormWTFDeleteFilm
+from APP_FILMS_164.filament.gestion_films_wtf_forms import FormWTFUpdateFilm, FormWTFAddFilm, FormWTFDeleteFilm
 
 """Ajouter un film grâce au formulaire "film_add_wtf.html"
 Auteur : OM 2022.04.11
@@ -22,7 +22,7 @@ Test : exemple: cliquer sur le menu "Films/Genres" puis cliquer sur le bouton "A
 Paramètres : sans
 
 
-Remarque :  Dans le champ "nom_film_update_wtf" du formulaire "films/films_update_wtf.html",
+Remarque :  Dans le champ "nom_film_update_wtf" du formulaire "filament/films_update_wtf.html",
             le contrôle de la saisie s'effectue ici en Python dans le fichier ""
             On ne doit pas accepter un champ vide.
 """
@@ -40,14 +40,14 @@ def film_add_wtf():
                 valeurs_insertion_dictionnaire = {"value_nom_film": nom_film_add}
                 print("valeurs_insertion_dictionnaire ", valeurs_insertion_dictionnaire)
 
-                strsql_insert_film = """INSERT INTO t_film (id_film,nom_film) VALUES (NULL,%(value_nom_film)s) """
+                strsql_insert_film = """INSERT INTO filament (filament_id,nom_mat) VALUES (NULL,%(value_nom_film)s) """
                 with DBconnection() as mconn_bd:
                     mconn_bd.execute(strsql_insert_film, valeurs_insertion_dictionnaire)
 
                 flash(f"Données insérées !!", "success")
                 print(f"Données insérées !!")
 
-                # Pour afficher et constater l'insertion du nouveau film (id_film_sel=0 => afficher tous les films)
+                # Pour afficher et constater l'insertion du nouveau film (id_film_sel=0 => afficher tous les filament)
                 return redirect(url_for('films_genres_afficher', id_film_sel=0))
 
         except Exception as Exception_genres_ajouter_wtf:
@@ -68,7 +68,7 @@ Paramètres : sans
 
 But : Editer(update) un genre qui a été sélectionné dans le formulaire "imprimante_afficher.html"
 
-Remarque :  Dans le champ "nom_film_update_wtf" du formulaire "films/films_update_wtf.html",
+Remarque :  Dans le champ "nom_film_update_wtf" du formulaire "filament/films_update_wtf.html",
             le contrôle de la saisie s'effectue ici en Python.
             On ne doit pas accepter un champ vide.
 """
@@ -84,7 +84,7 @@ def film_update_wtf():
     try:
         # 2023.05.14 OM S'il y a des listes déroulantes dans le formulaire
         # La validation pose quelques problèmes
-        if request.method == "POST" and form_update_film.submit.data:
+        if request.method == "POST" and form_update_filament.submit.data:
             # Récupèrer la valeur du champ depuis "imprimante_update_wtf.html" après avoir cliqué sur "SUBMIT".
             nom_film_update = form_update_film.nom_film_update_wtf.data
             duree_film_update = form_update_film.duree_film_update_wtf.data
@@ -101,12 +101,12 @@ def film_update_wtf():
                                           }
             print("valeur_update_dictionnaire ", valeur_update_dictionnaire)
 
-            str_sql_update_nom_film = """UPDATE t_film SET nom_film = %(value_nom_film)s,
-                                                            duree_film = %(value_duree_film)s,
-                                                            description_film = %(value_description_film)s,
-                                                            cover_link_film = %(value_cover_link_film)s,
+            str_sql_update_nom_film = """UPDATE filament SET nom_mat = %(value_nom_film)s,
+                                                            marque = %(value_duree_film)s,
+                                                            prix = %(value_description_film)s,
+                                                             = %(value_cover_link_film)s,
                                                             date_sortie_film = %(value_datesortie_film)s
-                                                            WHERE id_film = %(value_id_film)s"""
+                                                            WHERE filament_id = %(value_id_film)s"""
             with DBconnection() as mconn_bd:
                 mconn_bd.execute(str_sql_update_nom_film, valeur_update_dictionnaire)
 
@@ -152,7 +152,7 @@ Test : ex. cliquer sur le menu "film" puis cliquer sur le bouton "DELETE" d'un "
     
 Paramètres : sans
 
-Remarque :  Dans le champ "nom_film_delete_wtf" du formulaire "films/film_delete_wtf.html"
+Remarque :  Dans le champ "nom_film_delete_wtf" du formulaire "filament/film_delete_wtf.html"
             On doit simplement cliquer sur "DELETE"
 """
 
@@ -168,13 +168,13 @@ def film_delete_wtf():
     # Objet formulaire pour effacer le film sélectionné.
     form_delete_film = FormWTFDeleteFilm()
     try:
-        # Si on clique sur "ANNULER", afficher tous les films.
+        # Si on clique sur "ANNULER", afficher tous les filament.
         if form_delete_film.submit_btn_annuler.data:
             return redirect(url_for("films_genres_afficher", id_film_sel=0))
 
         if form_delete_film.submit_btn_conf_del_film.data:
             # Récupère les données afin d'afficher à nouveau
-            # le formulaire "films/film_delete_wtf.html" lorsque le bouton "Etes-vous sur d'effacer ?" est cliqué.
+            # le formulaire "filament/film_delete_wtf.html" lorsque le bouton "Etes-vous sur d'effacer ?" est cliqué.
             data_film_delete = session['data_film_delete']
             print("data_film_delete ", data_film_delete)
 
@@ -214,7 +214,7 @@ def film_delete_wtf():
                 print("data_film_delete...", data_film_delete)
 
                 # Nécessaire pour mémoriser les données afin d'afficher à nouveau
-                # le formulaire "films/film_delete_wtf.html" lorsque le bouton "Etes-vous sur d'effacer ?" est cliqué.
+                # le formulaire "filament/film_delete_wtf.html" lorsque le bouton "Etes-vous sur d'effacer ?" est cliqué.
                 session['data_film_delete'] = data_film_delete
 
             # Le bouton pour l'action "DELETE" dans le form. "film_delete_wtf.html" est caché.

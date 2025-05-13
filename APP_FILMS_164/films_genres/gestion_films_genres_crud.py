@@ -1,7 +1,7 @@
 """
     Fichier : gestion_films_genres_crud.py
     Auteur : OM 2021.05.01
-    Gestions des "routes" FLASK et des données pour l'association entre les films et les imprimante.
+    Gestions des "routes" FLASK et des données pour l'association entre les filament et les imprimante.
 """
 from pathlib import Path
 
@@ -18,9 +18,9 @@ from APP_FILMS_164.erreurs.exceptions import *
     Auteur : OM 2021.05.01
     Définition d'une "route" /films_genres_afficher
     
-    But : Afficher les films avec les imprimante associés pour chaque film.
+    But : Afficher les filament avec les imprimante associés pour chaque film.
     
-    Paramètres : id_genre_sel = 0 >> tous les films.
+    Paramètres : id_genre_sel = 0 >> tous les filament.
                  id_genre_sel = "n" affiche le film dont l'id est "n"
                  
 """
@@ -38,7 +38,7 @@ def films_genres_afficher(id_film_sel):
                                                             LEFT JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
                                                             GROUP BY id_film"""
                 if id_film_sel == 0:
-                    # le paramètre 0 permet d'afficher tous les films
+                    # le paramètre 0 permet d'afficher tous les filament
                     # Sinon le paramètre représente la valeur de l'id du film
                     mc_afficher.execute(strsql_genres_films_afficher_data)
                 else:
@@ -61,7 +61,7 @@ def films_genres_afficher(id_film_sel):
                     # Si l'utilisateur change l'id_film dans l'URL et qu'il ne correspond à aucun film
                     flash(f"Le film {id_film_sel} demandé n'existe pas !!", "warning")
                 else:
-                    flash(f"Données films et imprimante affichés !!", "success")
+                    flash(f"Données filament et imprimante affichés !!", "success")
 
         except Exception as Exception_films_genres_afficher:
             raise ExceptionFilmsGenresAfficher(f"fichier : {Path(__file__).name}  ;  {films_genres_afficher.__name__} ;"
@@ -258,7 +258,7 @@ def update_genre_film_selected():
                                                    f"{Exception_update_genre_film_selected}")
 
     # Après cette mise à jour de la table intermédiaire "t_genre_film",
-    # on affiche les films et le(urs) genre(s) associé(s).
+    # on affiche les filament et le(urs) genre(s) associé(s).
     return redirect(url_for('films_genres_afficher', id_film_sel=id_film_selected))
 
 

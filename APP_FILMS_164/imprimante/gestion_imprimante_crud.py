@@ -57,7 +57,7 @@ def imprimante_afficher(order_by, id_genre_sel):
 
                 # Différencier les messages si la table est vide.
                 if not data_imprimante and id_genre_sel == 0:
-                    flash("""La table "t_imprimante
+                    flash("""La table "imprimante
 " est vide. !!""", "warning")
                 elif not data_imprimante and id_genre_sel > 0:
                     # Si l'utilisateur change l'id_genre dans l'URL et que le genre n'existe pas,
@@ -94,6 +94,10 @@ def imprimante_afficher(order_by, id_genre_sel):
                 Pour comprendre [A-Za-zÀ-ÖØ-öø-ÿ] il faut se reporter à la table ASCII https://www.ascii-code.com/
                 Accepte le trait d'union ou l'apostrophe, et l'espace entre deux mots, mais pas plus d'une occurence.
 """
+
+
+class ExceptionimprimanteAjouterWtf:
+    pass
 
 
 @app.route("/imprimante_ajouter", methods=['GET', 'POST'])
@@ -171,8 +175,8 @@ def imprimante_update_wtf():
                                           }
             print("valeur_update_dictionnaire ", valeur_update_dictionnaire)
 
-            str_sql_update_intituleimprimante = """UPDATE t_imprimante SET intitule_imprimante = %(value_name_imprimante)s, 
-            date_ins_imprimante = %(value_date_imprimante_essai)s WHERE id_imprimante = %(value_id_imprimante)s """
+            str_sql_update_intituleimprimante = """UPDATE imprimante SET marque = %(value_name_imprimante)s, 
+            entretien = %(value_date_imprimante_essai)s WHERE id_imprimante = %(value_id_imprimante)s """
             with DBconnection() as mconn_bd:
                 mconn_bd.execute(str_sql_update_intituleimprimante, valeur_update_dictionnaire)
 
@@ -184,7 +188,7 @@ def imprimante_update_wtf():
             return redirect(url_for('imprimante_afficher', order_by="ASC", id_imprimante_sel=id_imprimante_update))
         elif request.method == "GET":
             # Opération sur la BD pour récupérer "id_imprimante" et "intitule_imprimante" de la "t_imprimante"
-            str_sql_id_imprimante = "SELECT id_imprimante, intitule_imprimante, date_ins_imprimante FROM t_imprimante " \
+            str_sql_id_imprimante = "SELECT * FROM imprimante " \
                                "WHERE id_imprimante = %(value_id_imprimante)s"
             valeur_select_dictionnaire = {"value_id_imprimante": id_imprimante_update}
             with DBconnection() as mybd_conn:
@@ -192,11 +196,11 @@ def imprimante_update_wtf():
             # Une seule valeur est suffisante "fetchone()", vu qu'il n'y a qu'un seul champ "nom imprimante" pour l'UPDATE
             data_nom_imprimante = mybd_conn.fetchone()
             print("data_nom_imprimante ", data_nom_imprimante, " type ", type(data_nom_imprimante), " imprimante ",
-                  data_nom_imprimante["intitule_imprimante"])
+                  data_nom_imprimante["id_imprimante"])
 
             # Afficher la valeur sélectionnée dans les champs du formulaire "imprimante_update_wtf.html"
-            form_update.nom_imprimante_update_wtf.data = data_nom_imprimante["intitule_imprimante"]
-            form_update.date_imprimante_wtf_essai.data = data_nom_imprimante["date_ins_imprimante"]
+            form_update.nom_imprimante_update_wtf.data = data_nom_imprimante["id_imprimante"]
+            form_update.date_imprimante_wtf_essai.data = data_nom_imprimante["id_imprimante"]
 
     except Exception as Exception_imprimante_update_wtf:
         raise ExceptionimprimanteUpdateWtf(f"fichier : {Path(__file__).name}  ;  "
@@ -225,86 +229,73 @@ def imprimante_update_wtf():
 def imprimante_delete_wtf():
     data_films_attribue_imprimante_delete = None
     btn_submit_del = None
-    # L'utilisateur vient de cliquer sur le bouton "DELETE". Récupère la valeur de "id_imprimante"
-    id_imprimante_delete = request.values['id_imprimante_btn_delete_html']
+    id_imprimante_delete = request.values.get('id_imprimante_btn_delete_html')
 
-    # Objet formulaire pour effacer le imprimante sélectionné.
+    if not id_imprimante_delete:
+        flash("ID d'imprimante manquant.", "danger")
+        return redirect(url_for('imprimante_afficher', order_by="ASC", id_imprimante_sel=0))
+
+    # Objet formulaire pour effacer l'imprimante sélectionnée
     form_delete = FormWTFDeleteImprimante()
-    try:
-        print(" on submit ", form_delete.validate_on_submit())
-        if request.method == "POST" and form_delete.validate_on_submit():
 
+    try:
+        if request.method == "POST" and form_delete.validate_on_submit():
             if form_delete.submit_btn_annuler.data:
+                # L'utilisateur annule la suppression
                 return redirect(url_for("imprimante_afficher", order_by="ASC", id_imprimante_sel=0))
 
             if form_delete.submit_btn_conf_del.data:
-                # Récupère les données afin d'afficher à nouveau
-                # le formulaire "imprimante/imprimante_delete_wtf.html" lorsque le bouton "Etes-vous sur d'effacer ?" est cliqué.
-                data_films_attribue_imprimante_delete = session['data_films_attribue_imprimante_delete']
-                print("data_films_attribue_imprimante_delete ", data_films_attribue_imprimante_delete)
+                # L'utilisateur est sur le point de confirmer la suppression
+                data_films_attribue_imprimante_delete = session.get('data_films_attribue_imprimante_delete', None)
+                if not data_films_attribue_imprimante_delete:
+                    flash("Aucune donnée associée à cette imprimante.", "warning")
+                    return redirect(url_for("imprimante_afficher", order_by="ASC", id_imprimante_sel=0))
 
-                flash(f"Effacer le imprimante de façon définitive de la BD !!!", "danger")
-                # L'utilisateur vient de cliquer sur le bouton de confirmation pour effacer...
-                # On affiche le bouton "Effacer imprimante" qui va irrémédiablement EFFACER le imprimante
+                flash(f"Vous allez supprimer l'imprimante définitivement de la BD !!!", "danger")
                 btn_submit_del = True
 
             if form_delete.submit_btn_del.data:
+                # L'utilisateur confirme la suppression
                 valeur_delete_dictionnaire = {"value_id_imprimante": id_imprimante_delete}
-                print("valeur_delete_dictionnaire ", valeur_delete_dictionnaire)
 
-                str_sql_delete_films_imprimante = """DELETE FROM t_imprimante_film WHERE fk_imprimante = %(value_id_imprimante)s"""
-                str_sql_delete_idimprimante = """DELETE FROM t_imprimante WHERE id_imprimante = %(value_id_imprimante)s"""
-                # Manière brutale d'effacer d'abord la "fk_imprimante", même si elle n'existe pas dans la "t_imprimante_film"
-                # Ensuite on peut effacer le imprimante vu qu'il n'est plus "lié" (INNODB) dans la "t_imprimante_film"
+                str_sql_delete_films_imprimante = """DELETE FROM filaments_imprimante WHERE Imprimante_Fk = %(value_id_imprimante)s"""
+                str_sql_delete_reservation = """DELETE FROM reservation WHERE imprimante_id = %(value_id_imprimante)s"""
+                str_sql_delete_imprimante = """DELETE FROM imprimante WHERE id_imprimante = %(value_id_imprimante)s"""
+
                 with DBconnection() as mconn_bd:
                     mconn_bd.execute(str_sql_delete_films_imprimante, valeur_delete_dictionnaire)
-                    mconn_bd.execute(str_sql_delete_idimprimante, valeur_delete_dictionnaire)
+                    mconn_bd.execute(str_sql_delete_reservation, valeur_delete_dictionnaire)
+                    mconn_bd.execute(str_sql_delete_imprimante, valeur_delete_dictionnaire)
 
-                flash(f"imprimante définitivement effacé !!", "success")
-                print(f"imprimante définitivement effacé !!")
-
-                # afficher les données
+                flash(f"Imprimante définitivement supprimée !", "success")
                 return redirect(url_for('imprimante_afficher', order_by="ASC", id_imprimante_sel=0))
 
         if request.method == "GET":
             valeur_select_dictionnaire = {"value_id_imprimante": id_imprimante_delete}
-            print(id_imprimante_delete, type(id_imprimante_delete))
-
-            # Requête qui affiche tous les films_imprimante qui ont le imprimante que l'utilisateur veut effacer
-            str_sql_imprimante_films_delete = """SELECT id_imprimante_film, nom_film, id_imprimante, intitule_imprimante FROM t_imprimante_film 
-                                            INNER JOIN t_film ON t_imprimante_film.fk_film = t_film.id_film
-                                            INNER JOIN t_imprimante ON t_imprimante_film.fk_imprimante = t_imprimante.id_imprimante
-                                            WHERE fk_imprimante = %(value_id_imprimante)s"""
+            str_sql_imprimante_films_delete = """SELECT * FROM imprimante
+                                                 INNER JOIN fichier_utiliser ON imprimante.fichier = fichier_utiliser.id_fichier
+                                                 WHERE imprimante.id_imprimante = %(value_id_imprimante)s"""
 
             with DBconnection() as mydb_conn:
                 mydb_conn.execute(str_sql_imprimante_films_delete, valeur_select_dictionnaire)
                 data_films_attribue_imprimante_delete = mydb_conn.fetchall()
-                print("data_films_attribue_imprimante_delete...", data_films_attribue_imprimante_delete)
-
-                # Nécessaire pour mémoriser les données afin d'afficher à nouveau
-                # le formulaire "imprimante/imprimante_delete_wtf.html" lorsque le bouton "Etes-vous sur d'effacer ?" est cliqué.
                 session['data_films_attribue_imprimante_delete'] = data_films_attribue_imprimante_delete
 
-                # Opération sur la BD pour récupérer "id_imprimante" et "intitule_imprimante" de la "t_imprimante"
-                str_sql_id_imprimante = "SELECT id_imprimante, intitule_imprimante FROM t_imprimante WHERE id_imprimante = %(value_id_imprimante)s"
-
+                str_sql_id_imprimante = "SELECT id_imprimante, marque FROM imprimante WHERE id_imprimante = %(value_id_imprimante)s"
                 mydb_conn.execute(str_sql_id_imprimante, valeur_select_dictionnaire)
-                # Une seule valeur est suffisante "fetchone()",
-                # vu qu'il n'y a qu'un seul champ "nom imprimante" pour l'action DELETE
                 data_nom_imprimante = mydb_conn.fetchone()
-                print("data_nom_imprimante ", data_nom_imprimante, " type ", type(data_nom_imprimante), " imprimante ",
-                      data_nom_imprimante["intitule_imprimante"])
 
-            # Afficher la valeur sélectionnée dans le champ du formulaire "imprimante_delete_wtf.html"
-            form_delete.nom_imprimante_delete_wtf.data = data_nom_imprimante["intitule_imprimante"]
+            if data_nom_imprimante:
+                form_delete.nom_imprimante_delete_wtf.data = data_nom_imprimante["marque"]
+            else:
+                flash("Imprimante introuvable.", "danger")
+                return redirect(url_for('imprimante_afficher', order_by="ASC", id_imprimante_sel=0))
 
-            # Le bouton pour l'action "DELETE" dans le form. "imprimante_delete_wtf.html" est caché.
             btn_submit_del = False
 
-    except Exception as Exception_imprimante_delete_wtf:
-        raise ExceptionimprimanteDeleteWtf(f"fichier : {Path(__file__).name}  ;  "
-                                      f"{imprimante_delete_wtf.__name__} ; "
-                                      f"{Exception_imprimante_delete_wtf}")
+    except Exception as e:
+        flash(f"Une erreur est survenue : {str(e)}", "danger")
+        return redirect(url_for('imprimante_afficher', order_by="ASC", id_imprimante_sel=0))
 
     return render_template("imprimante/imprimante_delete_wtf.html",
                            form_delete=form_delete,
