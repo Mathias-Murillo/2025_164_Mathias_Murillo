@@ -166,16 +166,20 @@ def imprimante_update_wtf():
             # Récupèrer la valeur du champ depuis "imprimante_update_wtf.html" après avoir cliqué sur "SUBMIT".
             # Puis la convertir en lettres minuscules.
             name_imprimante_update = form_update.nom_imprimante_update_wtf.data
-            name_imprimante_update = name_imprimante_update.lower()
-            date_imprimante_essai = form_update.date_imprimante_wtf_essai.data
+            name_entretien_update = form_update.entretien_imprimante_update_wtf.data
+            name_marque_update = form_update.marque_imprimante_update_wt_wtf.data
+            name_num_serie_update = form_update.num_serie_imprimante_update_wtf.data
+            date_imprimante_essai = form_update.date_genre_wtf_essai.data
 
             valeur_update_dictionnaire = {"value_id_imprimante": id_imprimante_update,
                                           "value_name_imprimante": name_imprimante_update,
+                                          "value_name_entretien": name_entretien_update,
+                                          "value_name_marque": name_marque_update,
                                           "value_date_imprimante_essai": date_imprimante_essai
                                           }
             print("valeur_update_dictionnaire ", valeur_update_dictionnaire)
 
-            str_sql_update_intituleimprimante = """UPDATE imprimante SET marque = %(value_name_imprimante)s, 
+            str_sql_update_intituleimprimante = """UPDATE imprimante SET marque = %(value_name_marque)s, 
             entretien = %(value_date_imprimante_essai)s WHERE id_imprimante = %(value_id_imprimante)s """
             with DBconnection() as mconn_bd:
                 mconn_bd.execute(str_sql_update_intituleimprimante, valeur_update_dictionnaire)

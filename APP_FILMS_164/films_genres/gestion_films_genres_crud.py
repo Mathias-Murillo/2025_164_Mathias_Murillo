@@ -32,18 +32,20 @@ def films_genres_afficher(id_film_sel):
     if request.method == "GET":
         try:
             with DBconnection() as mc_afficher:
-                strsql_genres_films_afficher_data = """SELECT id_film, nom_film, duree_film, description_film, cover_link_film, date_sortie_film,
-                                                            GROUP_CONCAT(intitule_genre) as GenresFilms FROM t_genre_film
-                                                            RIGHT JOIN t_film ON t_film.id_film = t_genre_film.fk_film
-                                                            LEFT JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
-                                                            GROUP BY id_film"""
+                strsql_genres_films_afficher_data = """SELECT r.id_reservation AS id_reservation,
+                                                        i.num_serie AS numero_serie_imprimante,
+                                                        i.marque AS marque_imprimante,
+                                                        r.date_reservation AS date_reservation,
+                                                        f.theme AS theme_fichier,
+                                                        f.temp AS duree_fichier FROM reservation r JOIN imprimante i ON r.imprimante_id = i.id_imprimante JOIN fichier_utiliser f ON i.fichier = f.id_fichier
+"""
                 if id_film_sel == 0:
                     # le paramètre 0 permet d'afficher tous les filament
                     # Sinon le paramètre représente la valeur de l'id du film
                     mc_afficher.execute(strsql_genres_films_afficher_data)
                 else:
                     # Constitution d'un dictionnaire pour associer l'id du film sélectionné avec un nom de variable
-                    valeur_id_film_selected_dictionnaire = {"value_id_film_selected": id_film_sel}
+                    valeur_id_film_selected_dictionnaire = {"value_id_imprimante_selected": id_film_sel}
                     # En MySql l'instruction HAVING fonctionne comme un WHERE... mais doit être associée à un GROUP BY
                     # L'opérateur += permet de concaténer une nouvelle valeur à la valeur de gauche préalablement définie.
                     strsql_genres_films_afficher_data += """ HAVING id_film= %(value_id_film_selected)s"""
@@ -56,7 +58,7 @@ def films_genres_afficher(id_film_sel):
 
                 # Différencier les messages.
                 if not data_genres_films_afficher and id_film_sel == 0:
-                    flash("""La table "t_film" est vide. !""", "warning")
+                    flash("""La table "reservation" est vide. !""", "warning")
                 elif not data_genres_films_afficher and id_film_sel > 0:
                     # Si l'utilisateur change l'id_film dans l'URL et qu'il ne correspond à aucun film
                     flash(f"Le film {id_film_sel} demandé n'existe pas !!", "warning")
@@ -93,7 +95,7 @@ def edit_genre_film_selected():
     if request.method == "GET":
         try:
             with DBconnection() as mc_afficher:
-                strsql_genres_afficher = """SELECT id_genre, intitule_genre FROM t_genre ORDER BY id_genre ASC"""
+                strsql_genres_afficher = """SELECT * FROM reservation ORDER BY id_reservation ASC"""
                 mc_afficher.execute(strsql_genres_afficher)
             data_genres_all = mc_afficher.fetchall()
             print("dans edit_genre_film_selected ---> data_genres_all", data_genres_all)
@@ -221,11 +223,11 @@ def update_genre_film_selected():
 
             # SQL pour insérer une nouvelle association entre
             # "fk_film"/"id_film" et "fk_genre"/"id_genre" dans la "t_genre_film"
-            strsql_insert_genre_film = """INSERT INTO t_genre_film (id_genre_film, fk_genre, fk_film)
+            strsql_insert_genre_film = """INSERT INTO reservation (id_reservation, imprimante_id, id_imprimante)
                                                     VALUES (NULL, %(value_fk_genre)s, %(value_fk_film)s)"""
 
             # SQL pour effacer une (des) association(s) existantes entre "id_film" et "id_genre" dans la "t_genre_film"
-            strsql_delete_genre_film = """DELETE FROM t_genre_film WHERE fk_genre = %(value_fk_genre)s AND fk_film = %(value_fk_film)s"""
+            strsql_delete_genre_film = """DELETE FROM reservation WHERE imprimante_id = %(value_fk_genre)s AND id_reservation = %(value_fk_film)s"""
 
             with DBconnection() as mconn_bd:
                 # Pour le film sélectionné, parcourir la liste des imprimante à INSÉRER dans la "t_genre_film".
@@ -281,11 +283,10 @@ def genres_films_afficher_data(valeur_id_film_selected_dict):
                                         INNER JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
                                         WHERE id_film = %(value_id_film_selected)s"""
 
-        strsql_genres_films_non_attribues = """SELECT id_genre, intitule_genre FROM t_genre WHERE id_genre not in(SELECT id_genre as idGenresFilms FROM t_genre_film
-                                                    INNER JOIN t_film ON t_film.id_film = t_genre_film.fk_film
-                                                    INNER JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
+        strsql_genres_films_non_attribues = """SELECT * FROM imprimante WHERE id_imprimante not in(SELECT id_reservation as idGenresFilms FROM reservation
+                                                    INNER JOIN filament ON filament.id_filament = reservation.imprimante_id
+                                                    INNER JOIN t_imprimante ON imprimante.id_imprimante = filament.imprimante_fk
                                                     WHERE id_film = %(value_id_film_selected)s)"""
-
         strsql_genres_films_attribues = """SELECT id_film, id_genre, intitule_genre FROM t_genre_film
                                             INNER JOIN t_film ON t_film.id_film = t_genre_film.fk_film
                                             INNER JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
