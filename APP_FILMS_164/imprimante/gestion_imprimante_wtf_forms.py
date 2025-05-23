@@ -42,7 +42,7 @@ class FormWTFUpdateImprimante(FlaskForm):
     nom_imprimante_update_wtf = StringField("modéle ", validators=[Length(min=2, max=20, message="min 2 max 20"),
                                                                           Regexp(nom_genre_update_regexp,
                                                                                  message="Pas de chiffres, de "
-                                                                                         "caractères "
+   a                                                                                      "caractères "
                                                                                          "spéciaux, "
                                                                                          "d'espace à double, de double "
                                                                                          "apostrophe, de double trait "
