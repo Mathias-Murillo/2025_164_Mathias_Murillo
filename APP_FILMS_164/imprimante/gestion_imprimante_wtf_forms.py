@@ -47,7 +47,7 @@ class FormWTFUpdateImprimante(FlaskForm):
                                                                                          "d'espace à double, de double "
                                                                                          "apostrophe, de double trait "
                                                                                          "union")
-                      a                                                    ])
+                                                               ])
     nom_genre_update_regexp = ""
     entretien_imprimante_update_wtf = StringField("modéle ", validators=[Length(min=2, max=20, message="min 2 max 20"),
                                                                           Regexp(nom_genre_update_regexp,
