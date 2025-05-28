@@ -167,14 +167,15 @@ def imprimante_update_wtf():
             # Puis la convertir en lettres minuscules.
             name_imprimante_update = form_update.nom_imprimante_update_wtf.data
             name_entretien_update = form_update.entretien_imprimante_update_wtf.data
-            name_marque_update = form_update.marque_imprimante_update_wt_wtf.data
+            name_marque_update = form_update.marque_imprimante_update_wtf.data
             name_num_serie_update = form_update.num_serie_imprimante_update_wtf.data
-            date_imprimante_essai = form_update.date_genre_wtf_essai.data
+            date_imprimante_essai = form_update.date_imprimante_wtf_essai.data
 
             valeur_update_dictionnaire = {"value_id_imprimante": id_imprimante_update,
                                           "value_name_imprimante": name_imprimante_update,
                                           "value_name_entretien": name_entretien_update,
                                           "value_name_marque": name_marque_update,
+                                          "value_name_num_serie": name_num_serie_update,
                                           "value_date_imprimante_essai": date_imprimante_essai
                                           }
             print("valeur_update_dictionnaire ", valeur_update_dictionnaire)
@@ -200,10 +201,10 @@ def imprimante_update_wtf():
             # Une seule valeur est suffisante "fetchone()", vu qu'il n'y a qu'un seul champ "nom imprimante" pour l'UPDATE
             data_nom_imprimante = mybd_conn.fetchone()
             print("data_nom_imprimante ", data_nom_imprimante, " type ", type(data_nom_imprimante), " imprimante ",
-                  data_nom_imprimante["id_imprimante"])
+                  data_nom_imprimante["num_serie"])
 
             # Afficher la valeur sélectionnée dans les champs du formulaire "imprimante_update_wtf.html"
-            form_update.nom_imprimante_update_wtf.data = data_nom_imprimante["id_imprimante"]
+            form_update.nom_imprimante_update_wtf.data = data_nom_imprimante["num_serie"]
             form_update.date_imprimante_wtf_essai.data = data_nom_imprimante["id_imprimante"]
 
     except Exception as Exception_imprimante_update_wtf:
@@ -246,14 +247,16 @@ def imprimante_delete_wtf():
         if request.method == "POST" and form_delete.validate_on_submit():
             if form_delete.submit_btn_annuler.data:
                 # L'utilisateur annule la suppression
-                return redirect(url_for("imprimante_afficher", order_by="ASC", id_imprimante_sel=0))
+                return redirect(url_for("imprimante_afficher", order_by="ASC", id_imprimante_sel=0, id_genre_sel=0))
+
 
             if form_delete.submit_btn_conf_del.data:
                 # L'utilisateur est sur le point de confirmer la suppression
                 data_films_attribue_imprimante_delete = session.get('data_films_attribue_imprimante_delete', None)
                 if not data_films_attribue_imprimante_delete:
                     flash("Aucune donnée associée à cette imprimante.", "warning")
-                    return redirect(url_for("imprimante_afficher", order_by="ASC", id_imprimante_sel=0))
+                    return redirect(url_for("imprimante_afficher", order_by="ASC", id_imprimante_sel=0, id_genre_sel=0))
+
 
                 flash(f"Vous allez supprimer l'imprimante définitivement de la BD !!!", "danger")
                 btn_submit_del = True

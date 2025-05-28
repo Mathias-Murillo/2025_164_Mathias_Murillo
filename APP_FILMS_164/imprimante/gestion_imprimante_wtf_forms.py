@@ -39,7 +39,7 @@ class FormWTFUpdateImprimante(FlaskForm):
         Définition d'un "bouton" submit avec un libellé personnalisé.
     """
     nom_genre_update_regexp = ""
-    nom_imprimante_update_wtf = StringField("modéle ", validators=[Length(min=2, max=20, message="min 2 max 20"),
+    nom_imprimante_update_wtf = StringField("id imposible de changer ", validators=[Length(min=2, max=20, message="min 2 max 20"),
                                                                           Regexp(nom_genre_update_regexp,
                                                                                  message="Pas de chiffres, de "
                                                                                          "caractères "
@@ -49,7 +49,7 @@ class FormWTFUpdateImprimante(FlaskForm):
                                                                                          "union")
                                                                ])
     nom_genre_update_regexp = ""
-    entretien_imprimante_update_wtf = StringField("modéle ", validators=[Length(min=2, max=20, message="min 2 max 20"),
+    entretien_imprimante_update_wtf = StringField("onvera ", validators=[Length(min=2, max=20, message="min 2 max 20"),
                                                                           Regexp(nom_genre_update_regexp,
                                                                                  message="Pas de chiffres, de "
                                                                                          "caractères "
@@ -59,7 +59,7 @@ class FormWTFUpdateImprimante(FlaskForm):
                                                                                          "union")
                                                                           ])
     nom_genre_update_regexp = ""
-    marque_imprimante_update_wtf = StringField("modéle ", validators=[Length(min=2, max=20, message="min 2 max 20"),
+    marque_imprimante_update_wtf = StringField("Modéle", validators=[Length(min=2, max=20, message="min 2 max 20"),
                                                                           Regexp(nom_genre_update_regexp,
                                                                                  message="Pas de chiffres, de "
                                                                                          "caractères "
@@ -68,6 +68,17 @@ class FormWTFUpdateImprimante(FlaskForm):
                                                                                          "apostrophe, de double trait "
                                                                                          "union")
                                                                           ])
+    nom_genre_update_regexp = ""
+    date_imprimante_wtf_essai = StringField("date Nettoyage ", validators=[Length(min=2, max=20, message="min 2 max 20"),
+                                                                          Regexp(nom_genre_update_regexp,
+                                                                                 message="Pas de chiffres, de "
+                                                                                         "caractères "
+                                                                                         "spéciaux, "
+                                                                                         "d'espace à double, de double "
+                                                                                         "apostrophe, de double trait "
+                                                                                         "union")
+                                                                          ])
+
     nom_genre_update_regexp = ""
     num_serie_imprimante_update_wtf = StringField("modéle ", validators=[Length(min=2, max=20, message="min 2 max 20"),
                                                                           Regexp(nom_genre_update_regexp,
