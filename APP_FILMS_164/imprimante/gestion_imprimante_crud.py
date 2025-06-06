@@ -180,7 +180,7 @@ def imprimante_update_wtf():
                                           }
             print("valeur_update_dictionnaire ", valeur_update_dictionnaire)
 
-            str_sql_update_intituleimprimante = """UPDATE imprimante SET marque = %(value_name_marque)s, 
+            str_sql_update_intituleimprimante = """UPDATE imprimante SET marque = %(value_name_marque)s,num_serie = %(value_name_num_serie)s,
             entretien = %(value_date_imprimante_essai)s WHERE id_imprimante = %(value_id_imprimante)s """
             with DBconnection() as mconn_bd:
                 mconn_bd.execute(str_sql_update_intituleimprimante, valeur_update_dictionnaire)
@@ -190,7 +190,7 @@ def imprimante_update_wtf():
 
             # afficher et constater que la donnée est mise à jour.
             # Affiche seulement la valeur modifiée, "ASC" et l'"id_imprimante_update"
-            return redirect(url_for('imprimante_afficher', order_by="ASC", id_imprimante_sel=id_imprimante_update))
+            return redirect(url_for('imprimante_afficher', order_by="ASC", id_genre_sel=id_imprimante_update))
         elif request.method == "GET":
             # Opération sur la BD pour récupérer "id_imprimante" et "intitule_imprimante" de la "t_imprimante"
             str_sql_id_imprimante = "SELECT * FROM imprimante " \
@@ -238,7 +238,7 @@ def imprimante_delete_wtf():
 
     if not id_imprimante_delete:
         flash("ID d'imprimante manquant.", "danger")
-        return redirect(url_for('imprimante_afficher', order_by="ASC", id_imprimante_sel=0))
+        return redirect(url_for('imprimante_afficher', order_by="ASC", id_genre_sel=0))
 
     # Objet formulaire pour effacer l'imprimante sélectionnée
     form_delete = FormWTFDeleteImprimante()
@@ -247,7 +247,7 @@ def imprimante_delete_wtf():
         if request.method == "POST" and form_delete.validate_on_submit():
             if form_delete.submit_btn_annuler.data:
                 # L'utilisateur annule la suppression
-                return redirect(url_for("imprimante_afficher", order_by="ASC", id_imprimante_sel=0, id_genre_sel=0))
+                return redirect(url_for("imprimante_afficher", order_by="ASC", id_genre_sel=0))
 
 
             if form_delete.submit_btn_conf_del.data:
@@ -255,7 +255,7 @@ def imprimante_delete_wtf():
                 data_films_attribue_imprimante_delete = session.get('data_films_attribue_imprimante_delete', None)
                 if not data_films_attribue_imprimante_delete:
                     flash("Aucune donnée associée à cette imprimante.", "warning")
-                    return redirect(url_for("imprimante_afficher", order_by="ASC", id_imprimante_sel=0, id_genre_sel=0))
+                    return redirect(url_for("imprimante_afficher", order_by="ASC", id_genre_sel=0))
 
 
                 flash(f"Vous allez supprimer l'imprimante définitivement de la BD !!!", "danger")
@@ -275,7 +275,7 @@ def imprimante_delete_wtf():
                     mconn_bd.execute(str_sql_delete_imprimante, valeur_delete_dictionnaire)
 
                 flash(f"Imprimante définitivement supprimée !", "success")
-                return redirect(url_for('imprimante_afficher', order_by="ASC", id_imprimante_sel=0))
+                return redirect(url_for('imprimante_afficher', order_by="ASC", id_genre_sel=0))
 
         if request.method == "GET":
             valeur_select_dictionnaire = {"value_id_imprimante": id_imprimante_delete}
@@ -296,13 +296,13 @@ def imprimante_delete_wtf():
                 form_delete.nom_imprimante_delete_wtf.data = data_nom_imprimante["marque"]
             else:
                 flash("Imprimante introuvable.", "danger")
-                return redirect(url_for('imprimante_afficher', order_by="ASC", id_imprimante_sel=0))
+                return redirect(url_for('imprimante_afficher', order_by="ASC", id_genre_sel=0))
 
             btn_submit_del = False
 
     except Exception as e:
         flash(f"Une erreur est survenue : {str(e)}", "danger")
-        return redirect(url_for('imprimante_afficher', order_by="ASC", id_imprimante_sel=0))
+        return redirect(url_for('imprimante_afficher', order_by="ASC", id_genre_sel=0))
 
     return render_template("imprimante/imprimante_delete_wtf.html",
                            form_delete=form_delete,

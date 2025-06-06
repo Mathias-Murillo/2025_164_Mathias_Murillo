@@ -82,7 +82,13 @@ class DatabaseException(Base):
 class ExceptionImprimanteAfficher(Base):
     pass
 
+class ExceptionFilamentAfficher(Base):
+    pass
+
 class ExceptionimprimanteUpdateWtf(Base):  # ou Base, selon ton héritage
+    pass
+
+class ExceptionfilamentUpdateWtf(Base):  # ou Base, selon ton héritage
     pass
 
 class ExceptionGenreDeleteWtf(Base):

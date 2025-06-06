@@ -50,6 +50,8 @@ try:
     from APP_FILMS_164.films_genres import gestion_films_genres_crud
     from APP_FILMS_164.erreurs import msg_avertissements
 
+    from APP_FILMS_164.filament import gestion_filament_crud
+    from APP_FILMS_164.filament import gestion_filament_wtf_forms
     from APP_FILMS_164.filament import gestion_films_crud
     from APP_FILMS_164.filament import gestion_films_wtf_forms
 

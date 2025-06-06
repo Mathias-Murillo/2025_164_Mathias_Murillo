@@ -40,7 +40,7 @@ CREATE TABLE `fichier_utiliser` (
   `theme` varchar(100) NOT NULL,
   `quantité_filament` decimal(5,2) NOT NULL,
   `temp` time NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Dumping data for table `fichier_utiliser`
@@ -64,7 +64,7 @@ CREATE TABLE `filament` (
   `num_serie` varchar(50) DEFAULT NULL,
   `Quantité` int DEFAULT NULL,
   `prix` decimal(8,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 -- --------------------------------------------------------
 
@@ -75,7 +75,7 @@ CREATE TABLE `filament` (
 CREATE TABLE `filaments_imprimante` (
   `Imprimante_Fk` int NOT NULL,
   `Filament_Fk` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 -- --------------------------------------------------------
 
@@ -89,7 +89,7 @@ CREATE TABLE `imprimante` (
   `marque` varchar(50) DEFAULT NULL,
   `num_serie` varchar(50) DEFAULT NULL,
   `fichier` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Dumping data for table `imprimante`
@@ -114,7 +114,7 @@ CREATE TABLE `mat_entretien` (
   `type_outil` varchar(50) DEFAULT NULL,
   `produit` varchar(50) DEFAULT NULL,
   `prix` decimal(8,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Dumping data for table `mat_entretien`
@@ -140,7 +140,7 @@ CREATE TABLE `personne` (
   `prenom_pers` varchar(50) DEFAULT NULL,
   `mail_pers` varchar(100) DEFAULT NULL,
   `num_pers` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Dumping data for table `personne`
@@ -183,7 +183,7 @@ CREATE TABLE `reservation` (
   `personne_id` int NOT NULL,
   `date_creation` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `imprimante_id` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Dumping data for table `reservation`
@@ -223,7 +223,7 @@ CREATE TABLE `t_nettoyage` (
   `mat_utiliser` int DEFAULT NULL,
   `photo_état` blob,
   `fk_personne` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 --
 -- Dumping data for table `t_nettoyage`
