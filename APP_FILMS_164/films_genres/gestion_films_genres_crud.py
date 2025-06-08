@@ -64,7 +64,7 @@ def films_genres_afficher(id_film_sel):
                     # Si l'utilisateur change l'id_film dans l'URL et qu'il ne correspond à aucun film
                     flash(f"Le film {id_film_sel} demandé n'existe pas !!", "warning")
                 else:
-                    flash(f"Données filament et imprimante affichés !!", "success")
+                    flash(f"Données reservation affichés !!", "success")
 
         except Exception as Exception_films_genres_afficher:
             raise ExceptionFilmsGenresAfficher(f"fichier : {Path(__file__).name}  ;  {films_genres_afficher.__name__} ;"

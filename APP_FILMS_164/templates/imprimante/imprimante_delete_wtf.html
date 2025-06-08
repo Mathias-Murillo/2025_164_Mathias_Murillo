@@ -1,61 +1,58 @@
 {% extends "base.html" %}
-{% block title %} Effacer une imprimante (WTF) {% endblock %}
+{% block title %}Effacer une imprimante{% endblock %}
+
 {% block body %}
 <div class="container">
-	<div class="row">
-		<div class="col-md-12">
-			<p>
-				Effacer une imprimante
-			</p>
-			<form action="" method="POST" novalidate>
-				<!-- Protection contre les attaques Cross-Site Request Forgery (CSRF) -->
-				{{ form_delete.hidden_tag() }}
-				<table class="table table-bordered table-sm">
-					{% if data_films_associes %}
-						<h3>Ce genre est associé avec le(s) film(s) suivant(s) :</h3>
-					{% else %}
-						<h3>Ce genre à effacer n'est associé à aucun film.</h3>
-					{% endif %}
-					{% if data_films_associes %}
-						<thead>
-							<tr>
-								<th>
-									FILM(S)
-								</th>
-							</tr>
-						</thead>
-						{% for row in data_films_associes %}
-							<tbody>
-								<tr>
-									<td>
-										{{ row.nom_film }}
-									</td>
-								</tr>
-							</tbody>
-						{% endfor %}
-					{% endif %}
-				</table>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Effacer une imprimante</h2>
+            <form action="" method="POST" novalidate>
+                {{ form_delete.hidden_tag() }}
 
+                {% if data_films_associes %}
+                    <div class="alert alert-warning">
+                        <strong>Attention :</strong> Cette imprimante est liée aux éléments suivants :
+                    </div>
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th>Associations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data_films_associes %}
+                                <tr>
+                                    <td>{{ row.nom_film }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="alert alert-success">
+                        Cette imprimante n’est liée à aucune autre donnée. Elle peut être supprimée.
+                    </div>
+                {% endif %}
 
-				<div class="form-group">
-					<p>
-						{{ form_delete.nom_genre_delete_wtf.label }}<br>
-						{{ form_delete.nom_genre_delete_wtf(size=32, readonly=true) }}<br>
-						{% for error in form_delete.nom_genre_delete_wtf.errors %}
-							<span style="color: red;">[{{ error }}]</span>
-						{% endfor %}
-					</p>
-				</div>
-				{{ form_delete.submit_btn_conf_del(class="btn btn-info") }}
+                <div class="form-group">
+                    <label>{{ form_delete.nom_imprimante_delete_wtf.label }}</label>
+                    {{ form_delete.nom_imprimante_delete_wtf(class="form-control", readonly=true) }}
+                    {% for error in form_delete.nom_imprimante_delete_wtf.errors %}
+                        <span class="text-danger">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
 
-				{% if btn_submit_del %}
-					{{ form_delete.submit_btn_del(class="btn btn-danger") }}
-				{% endif %}
+                <br>
 
-				{{ form_delete.submit_btn_annuler(class="btn btn-primary") }}
-			</form>
-		</div>
-	</div>
+                {% if not confirmation %}
+                    {{ form_delete.submit_btn_del(class="btn btn-danger") }}
+                    {{ form_delete.submit_btn_annuler(class="btn btn-secondary") }}
+                {% else %}
+                    <p class="text-danger mt-3">Êtes-vous sûr de vouloir supprimer cette imprimante ?</p>
+                    {{ form_delete.submit_btn_conf_del(class="btn btn-danger") }}
+                    <a href="{{ url_for('imprimante_afficher', order_by='ASC', imprimante_id_sel=0) }}" class="btn btn-primary">Non</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
-

@@ -108,7 +108,7 @@ def imprimante_ajouter_wtf():
             if form.validate_on_submit():
                 name_genre_wtf = form.nom_genre_wtf.data
                 name_genre = name_genre_wtf.lower()
-                name_marque_wtf = form.marque_wtf.data;
+                name_marque_wtf = form.marque_wtf.data;y
                 valeurs_insertion_dictionnaire = {"value_intitule_genre": name_genre,
                                                   "value_marque": name_marque_wtf,
                                                   }
