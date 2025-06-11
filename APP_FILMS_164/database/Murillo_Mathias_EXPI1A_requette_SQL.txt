@@ -1,0 +1,143 @@
+-- Requête 1: Afficher tous les filaments, triés par ID en ordre ascendant
+SELECT * FROM filament ORDER BY filament_id ASC;
+-- Utilisation : Récupère toutes les colonnes de la table filament, triées par filament_id (ASC) pour afficher tous les filaments.
+
+-- Requête 2: Afficher un filament spécifique par ID
+SELECT * FROM filament WHERE filament_id = %(value_id_filament_selected)s;
+-- Utilisation : Récupère toutes les colonnes d'un filament spécifique, identifié par filament_id, pour l'afficher.
+
+-- Requête 3: Afficher tous les filaments, triés par ID en ordre descendant
+SELECT * FROM filament ORDER BY filament_id DESC;
+-- Utilisation : Récupère toutes les colonnes de la table filament, triées par filament_id (DESC) pour afficher les plus récents en premier.
+
+-- Requête 4: Insérer un nouveau filament
+INSERT INTO filament (filament_id, entretien, marque) VALUES (NULL, %(value_intitule_genre)s, %(value_marque)s);
+-- Utilisation : Ajoute un nouveau filament avec un ID auto-incrémenté (NULL), et des valeurs pour entretien et marque.
+
+-- Requête 5: Mettre à jour un filament
+UPDATE filament SET marque = %(value_name_marque)s, entretien = %(value_date_filament_essai)s WHERE filament_id = %(value_id_filament)s;
+-- Utilisation : Modifie la marque et l'entretien d'un filament spécifique, identifié par filament_id.
+
+-- Requête 6: Sélectionner un filament par ID pour mise à jour
+SELECT * FROM filament WHERE filament_id = %(value_id_filament)s;
+-- Utilisation : Récupère toutes les colonnes d'un filament spécifique pour pré-remplir un formulaire de mise à jour.
+
+-- Requête 7: Vérifier les associations avant suppression d'un filament
+SELECT * FROM filament
+INNER JOIN fichier_utiliser ON filament.fichier = fichier_utiliser.id_fichier
+WHERE filament.filament_id = %(value_id_filament)s;
+-- Utilisation : Vérifie les liens entre un filament et les fichiers associés avant de le supprimer.
+
+-- Requête 8: Sélectionner le nom d'un filament avant suppression
+SELECT filament_id, marque FROM filament WHERE filament_id = %(value_id_filament)s;
+-- Utilisation : Récupère l'ID et la marque d'un filament pour afficher dans un formulaire de confirmation de suppression.
+
+-- Requête 9: Supprimer les associations dans la table filaments_filament
+DELETE FROM filaments_filament WHERE Filament_Fk = %(value_id_filament)s;
+-- Utilisation : Efface les relations entre un filament et d'autres entités dans la table de jointure avant suppression.
+
+-- Requête 10: Supprimer les réservations associées à un filament
+DELETE FROM reservation WHERE filament_id = %(value_id_filament)s;
+-- Utilisation : Supprime les réservations liées à un filament spécifique avant sa suppression.
+
+-- Requête 11: Supprimer un filament
+DELETE FROM filament WHERE filament_id = %(value_id_filament)s;
+-- Utilisation : Efface un filament spécifique de la table filament, identifié par filament_id.
+
+-- Requête 12: Afficher toutes les imprimantes, triées par ID en ordre ascendant
+SELECT * FROM imprimante ORDER BY id_imprimante ASC;
+-- Utilisation : Récupère toutes les colonnes de la table imprimante, triées par id_imprimante (ASC) pour afficher toutes les imprimantes.
+
+-- Requête 13: Afficher une imprimante spécifique par ID
+SELECT * FROM imprimante WHERE id_imprimante = %(value_id_imprimante_selected)s;
+-- Utilisation : Récupère toutes les colonnes d'une imprimante spécifique, identifiée par id_imprimante, pour l'afficher.
+
+-- Requête 14: Afficher toutes les imprimantes, triées par ID en ordre descendant
+SELECT * FROM imprimante ORDER BY id_imprimante DESC;
+-- Utilisation : Récupère toutes les colonnes de la table imprimante, triées par id_imprimante (DESC) pour les plus récentes en premier.
+
+-- Requête 15: Insérer une nouvelle imprimante
+INSERT INTO imprimante (id_imprimante, entretien, marque) VALUES (NULL, %(value_intitule_genre)s, %(value_marque)s);
+-- Utilisation : Ajoute une nouvelle imprimante avec un ID auto-incrémenté (NULL), et des valeurs pour entretien et marque.
+
+-- Requête 16: Mettre à jour une imprimante
+UPDATE imprimante SET marque = %(value_name_marque)s, num_serie = %(value_name_num_serie)s, entretien = %(value_date_imprimante_essai)s WHERE id_imprimante = %(value_id_imprimante)s;
+-- Utilisation : Modifie la marque, le numéro de série et l'entretien d'une imprimante spécifique, identifiée par id_imprimante.
+
+-- Requête 17: Sélectionner une imprimante par ID pour mise à jour
+SELECT * FROM imprimante WHERE id_imprimante = %(value_id_imprimante)s;
+-- Utilisation : Récupère toutes les colonnes d'une imprimante spécifique pour pré-remplir un formulaire de mise à jour.
+
+-- Requête 18: Vérifier les associations avant suppression d'une imprimante
+SELECT * FROM imprimante
+INNER JOIN fichier_utiliser ON imprimante.fichier = fichier_utiliser.id_fichier
+WHERE imprimante.id_imprimante = %(value_id_imprimante)s;
+-- Utilisation : Vérifie les liens entre une imprimante et les fichiers associés avant de la supprimer.
+
+-- Requête 19: Sélectionner le nom d'une imprimante avant suppression
+SELECT id_imprimante, marque FROM imprimante WHERE id_imprimante = %(value_id_imprimante)s;
+-- Utilisation : Récupère l'ID et la marque d'une imprimante pour afficher dans un formulaire de confirmation de suppression.
+
+-- Requête 20: Supprimer les associations dans la table filaments_imprimante
+DELETE FROM filaments_imprimante WHERE Imprimante_Fk = %(value_id_imprimante)s;
+-- Utilisation : Efface les relations entre une imprimante et d'autres entités dans la table de jointure avant suppression.
+
+-- Requête 21: Supprimer les réservations associées à une imprimante
+DELETE FROM reservation WHERE imprimante_id = %(value_id_imprimante)s;
+-- Utilisation : Supprime les réservations liées à une imprimante spécifique avant sa suppression.
+
+-- Requête 22: Supprimer une imprimante
+DELETE FROM imprimante WHERE id_imprimante = %(value_id_imprimante)s;
+-- Utilisation : Efface une imprimante spécifique de la table imprimante, identifiée par id_imprimante.
+
+-- Requête 23: Afficher toutes les réservations avec détails
+SELECT r.id_reservation AS id_reservation,
+       i.num_serie AS numero_serie_imprimante,
+       i.marque AS marque_imprimante,
+       r.date_reservation AS date_reservation,
+       p.Nom_pers AS nomprenom,
+       f.theme AS theme_fichier,
+       f.temp AS duree_fichier 
+FROM reservation r 
+JOIN personne p ON r.personne_id = p.id_personne 
+JOIN imprimante i ON r.imprimante_id = i.id_imprimante 
+JOIN fichier_utiliser f ON i.fichier = f.id_fichier;
+-- Utilisation : Récupère les détails des réservations, incluant imprimante, personne et fichier, pour affichage global.
+
+-- Requête 24: Afficher toutes les réservations
+SELECT * FROM reservation ORDER BY id_reservation ASC;
+-- Utilisation : Récupère toutes les colonnes de la table reservation, triées par id_reservation (ASC) pour l'édition.
+
+-- Requête 25: Sélectionner un film pour l'édition
+SELECT id_film, nom_film, duree_film, description_film, cover_link_film, date_sortie_film, GROUP_CONCAT(id_genre) as GenresFilms 
+FROM t_genre_film
+INNER JOIN t_film ON t_film.id_film = t_genre_film.fk_film
+INNER JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
+WHERE id_film = %(value_id_film_selected)s;
+-- Utilisation : Récupère les détails d'un film et ses genres associés pour l'édition.
+
+-- Requête 26: Sélectionner les imprimantes non attribuées à un film
+SELECT * FROM imprimante 
+WHERE id_imprimante NOT IN (SELECT id_reservation AS idGenresFilms 
+                            FROM reservation
+                            INNER JOIN filament ON filament.filament_id = reservation.imprimante_id
+                            INNER JOIN t_imprimante ON imprimante.id_imprimante = filament.imprimante_fk
+                            WHERE id_film = %(value_id_film_selected)s);
+-- Utilisation : Récupère les imprimantes non liées à un film spécifique pour l'édition des associations.
+
+-- Requête 27: Sélectionner les genres attribués à un film
+SELECT id_film, id_genre, intitule_genre 
+FROM t_genre_film
+INNER JOIN t_film ON t_film.id_film = t_genre_film.fk_film
+INNER JOIN t_genre ON t_genre.id_genre = t_genre_film.fk_genre
+WHERE id_film = %(value_id_film_selected)s;
+-- Utilisation : Récupère les genres associés à un film spécifique pour l'édition.
+
+-- Requête 28: Insérer une nouvelle association filament-imprimante
+INSERT INTO reservation (id_reservation, imprimante_id, id_imprimante) 
+VALUES (NULL, %(value_fk_genre)s, %(value_fk_film)s);
+-- Utilisation : Ajoute une nouvelle relation entre un filament et une imprimante dans la table reservation.
+
+-- Requête 29: Supprimer une association filament-imprimante
+DELETE FROM reservation WHERE imprimante_id = %(value_fk_genre)s AND id_reservation = %(value_fk_film)s;
+-- Utilisation : Efface une relation spécifique entre un filament et une imprimante dans la table reservation.
