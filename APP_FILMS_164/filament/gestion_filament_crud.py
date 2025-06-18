@@ -1,6 +1,6 @@
 """Gestion des "routes" FLASK et des données pour les filament.
-Fichier : gestion_filament_crud.py
-Auteur : OM 2021.03.16
+Fichier : gestion_filament_crud.py b
+ Auteur : OM 2021.03.16
 """
 from pathlib import Path
 
